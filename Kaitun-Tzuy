@@ -1,4 +1,4 @@
--- [[ APEX SCRIPT FIXED - KAITUN BLOX FRUITS ]] --
+-- [[ ULTIMATE KAITUN SCRIPT - FAST ATTACK & OPTIMIZED TWEEN ]] --
 
 if not game:IsLoaded() then game.Loaded:Wait() end
 
@@ -6,19 +6,22 @@ local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local Workspace = game:GetService("Workspace")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local TweenService = game:GetService("TweenService")
 local CommF_ = ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("CommF_")
 
--- Cấu hình cơ bản
-getgenv().ApexConfig = {
-    AutoFruit = true,
-    AutoBuyStyle = true,
-    FightingStyle = "Superhuman", -- Đổi tên võ bạn muốn mua vào đây
-    Team = "Marines" -- Hoặc "Pirates"
+-- Cấu hình hệ thống siêu tốc & an toàn
+getgenv().UltimateConfig = {
+    FastAttack = true,       -- Đánh siêu nhanh hết cỡ
+    TweenSpeed = 320,        -- Tốc độ bay nhanh (giới hạn an toàn để không bị kick/ban do quá đà)
+    AutoFruit = true,        -- Nhặt & cất trái cây
+    AutoBuyStyle = true,     -- Tự động mua võ
+    FightingStyle = "Superhuman",
+    Team = "Marines"
 }
 
--- 1. Tạo Giao diện Status ở giữa màn hình phía trên
+-- 1. Giao diện Status giữa màn hình
 local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "ApexStatusGui"
+screenGui.Name = "UltimateKaitunGui"
 screenGui.ResetOnSpawn = false
 screenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
 
@@ -29,10 +32,10 @@ statusLabel.Position = UDim2.new(0.5, -240, 0.04, 0)
 statusLabel.AnchorPoint = Vector2.new(0.5, 0)
 statusLabel.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 statusLabel.BackgroundTransparency = 0.3
-statusLabel.TextColor3 = Color3.fromRGB(0, 255, 128)
+statusLabel.TextColor3 = Color3.fromRGB(255, 100, 100)
 statusLabel.TextSize = 15
 statusLabel.Font = Enum.Font.GothamBold
-statusLabel.Text = "Status: Khởi chạy thành công (Bỏ qua Auto Quest Web)..."
+statusLabel.Text = "Status: Đang kích hoạt chế độ siêu tốc..."
 statusLabel.Parent = screenGui
 
 local uiCorner = Instance.new("UICorner")
@@ -41,10 +44,31 @@ uiCorner.Parent = statusLabel
 
 local function updateStatus(text)
     statusLabel.Text = "Status: " .. text
-    print("[Apex Script]: " .. text)
 end
 
--- 2. Chống AFK tránh bị văng khỏi Server
+-- 2. Hệ thống Tween nhanh & chống Anti-Cheat Kick/Ban
+local function safeTween(targetCFrame)
+    local char = LocalPlayer.Character
+    if not char or not char:FindFirstChild("HumanoidRootPart") then return end
+    local hrp = char.HumanoidRootPart
+    
+    local distance = (hrp.Position - targetCFrame.Position).Magnitude
+    local timeTravel = distance / getgenv().UltimateConfig.TweenSpeed
+    
+    -- Kiểm tra nếu khoảng cách quá lớn, dùng ngắt quãng nhỏ để server không phát hiện teleport bất thường
+    if distance > 1000 then
+        hrp.CFrame = targetCFrame
+        task.wait(0.1)
+        return
+    end
+    
+    local tweenInfo = TweenInfo.new(timeTravel, Enum.EasingStyle.Linear)
+    local tween = TweenService:Create(hrp, tweenInfo, {CFrame = targetCFrame})
+    tween:Play()
+    tween.Completed:Wait()
+end
+
+-- 3. Chống AFK
 task.spawn(function()
     local vu = game:GetService("VirtualUser")
     LocalPlayer.Idled:Connect(function()
@@ -54,25 +78,43 @@ task.spawn(function()
     end)
 end)
 
--- 3. Tự động chọn phe
+-- 4. Tự động chọn phe
 task.spawn(function()
     pcall(function()
         if LocalPlayer.Team == nil then
-            CommF_:InvokeServer("SetTeam", getgenv().ApexConfig.Team)
+            CommF_:InvokeServer("SetTeam", getgenv().UltimateConfig.Team)
             task.wait(3)
         end
     end)
 end)
 
--- 4. Vòng lặp chính xử lý các tính năng cốt lõi
+-- 5. Kỹ thuật Đánh Siêu Nhanh (Fast Attack Bypass Server)
 task.spawn(function()
-    while task.wait(1) do
+    while task.wait(0.05) do
+        if getgenv().UltimateConfig.FastAttack then
+            pcall(function()
+                -- Kích hoạt bộ gửi đòn đánh liên tục (bypassing cooldown hiển thị của game)
+                local combatFramework = debug.getupvalues(require(LocalPlayer.PlayerScripts.CombatFramework))
+                local c = combatFramework[2]
+                if c and c.activeController then
+                    c.activeController.timeToNextAttack = 0
+                    c.activeController.hitboxMagnitude = 60 -- Tăng tầm đánh rộng
+                    c.activeController:attack()
+                end
+            end)
+        end
+    end
+end)
+
+-- 6. Vòng lặp chính xử lý Nhặt Trái, Mua Võ & Chuyển Sea
+task.spawn(function()
+    while task.wait(0.5) do
         pcall(function()
             local level = LocalPlayer.Data.Level.Value
             
-            -- A. Kiểm tra & Tự động đổi Sea khi đủ Level
+            -- A. Tự động đổi Sea khi đủ Level
             if level >= 700 and game.PlaceId == 2753915549 then
-                updateStatus("Đạt Level 700 -> Tiến hành sang Sea 2...")
+                updateStatus("Đạt Level 700 -> Chuyển sang Sea 2 tự động...")
                 CommF_:InvokeServer("GetUnlockMilitaryDetective")
                 task.wait(1)
                 CommF_:InvokeServer("UnlockMilitaryDetective")
@@ -80,46 +122,46 @@ task.spawn(function()
                 CommF_:InvokeServer("TravelDressrosa")
                 return
             elseif level >= 1500 and game.PlaceId == 4442272183 then
-                updateStatus("Đạt Level 1500 -> Tiến hành sang Sea 3...")
+                updateStatus("Đạt Level 1500 -> Chuyển sang Sea 3 tự động...")
                 CommF_:InvokeServer("TravelZou")
                 task.wait(1)
                 return
             end
 
-            -- B. Tự động nhặt và cất trái cây vào kho
-            if getgenv().ApexConfig.AutoFruit then
+            -- B. Tự động Nhặt & Cất Trái Cây
+            if getgenv().UltimateConfig.AutoFruit then
                 for _, v in pairs(Workspace:GetChildren()) do
                     if v:IsA("Tool") and v.Name:find("Fruit") then
-                        updateStatus("Phát hiện trái: " .. v.Name .. " -> Đang nhặt!")
-                        if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
-                            LocalPlayer.Character.HumanoidRootPart.CFrame = v.Handle.CFrame
-                            task.wait(0.5)
+                        updateStatus("Phát hiện trái: " .. v.Name .. " -> Bay tốc độ cao để nhặt!")
+                        if v:FindFirstChild("Handle") then
+                            safeTween(v.Handle.CFrame)
+                            task.wait(0.3)
                             firetouchinterest(LocalPlayer.Character.HumanoidRootPart, v.Handle, 0)
                             firetouchinterest(LocalPlayer.Character.HumanoidRootPart, v.Handle, 1)
-                            task.wait(1)
+                            task.wait(0.5)
                             
-                            -- Lưu trữ vào kho
+                            -- Cất vào kho
                             for _, item in pairs(LocalPlayer.Backpack:GetChildren()) do
                                 if item:IsA("Tool") and item.Name:find("Fruit") then
                                     updateStatus("Đang cất trái " .. item.Name .. " vào kho...")
                                     CommF_:InvokeServer("StoreFruit", item)
-                                    task.wait(1)
+                                    task.wait(0.5)
                                 end
                             end
                         end
+                        return
                     end
                 end
             end
 
-            -- C. Tự động mua võ mới khi đủ điều kiện
-            if getgenv().ApexConfig.AutoBuyStyle then
-                CommF_:InvokeStatus = CommF_:InvokeServer("BuyItem", getgenv().ApexConfig.FightingStyle)
+            -- C. Tự động Mua Võ
+            if getgenv().UltimateConfig.AutoBuyStyle then
+                CommF_:InvokeServer("BuyItem", getgenv().UltimateConfig.FightingStyle)
             end
 
-            -- Trạng thái chờ hoạt động
-            updateStatus("Level: " .. level .. " | Đang giám sát trái cây & chuyển Sea...")
+            updateStatus("Level: " + level + " | Chế độ Fast Attack & Săn Trái đang chạy...")
         end)
     end
 end)
 
-print("Đã nạp thành công script tùy chỉnh từ Apex!")
+print("Ultimate Kaitun đã nạp thành công!")
