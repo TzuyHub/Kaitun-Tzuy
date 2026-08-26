@@ -1,4 +1,4 @@
--- [[ ULTIMATE KAITUN SCRIPT - FAST ATTACK & OPTIMIZED TWEEN ]] --
+-- [[ INSTANT KANITUN SCRIPT - SIÊU TỐC KHÔNG ĐỘ TRỄ ]] --
 
 if not game:IsLoaded() then game.Loaded:Wait() end
 
@@ -9,96 +9,85 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local TweenService = game:GetService("TweenService")
 local CommF_ = ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("CommF_")
 
--- Cấu hình hệ thống siêu tốc & an toàn
-getgenv().UltimateConfig = {
-    FastAttack = true,       -- Đánh siêu nhanh hết cỡ
-    TweenSpeed = 320,        -- Tốc độ bay nhanh (giới hạn an toàn để không bị kick/ban do quá đà)
-    AutoFruit = true,        -- Nhặt & cất trái cây
-    AutoBuyStyle = true,     -- Tự động mua võ
+getgenv().InstantConfig = {
+    FastAttack = true,
+    TweenSpeed = 350, -- Tốc độ cực nhanh
+    AutoFruit = true,
+    AutoBuyStyle = true,
     FightingStyle = "Superhuman",
     Team = "Marines"
 }
 
 -- 1. Giao diện Status giữa màn hình
 local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "UltimateKaitunGui"
+screenGui.Name = "InstantKaitunGui"
 screenGui.ResetOnSpawn = false
 screenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
 
 local statusLabel = Instance.new("TextLabel")
 statusLabel.Name = "StatusText"
-statusLabel.Size = UDim2.new(0, 480, 0, 55)
-statusLabel.Position = UDim2.new(0.5, -240, 0.04, 0)
+statusLabel.Size = UDim2.new(0, 480, 0, 50)
+statusLabel.Position = UDim2.new(0.5, -240, 0.03, 0)
 statusLabel.AnchorPoint = Vector2.new(0.5, 0)
-statusLabel.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-statusLabel.BackgroundTransparency = 0.3
-statusLabel.TextColor3 = Color3.fromRGB(255, 100, 100)
+statusLabel.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
+statusLabel.BackgroundTransparency = 0.2
+statusLabel.TextColor3 = Color3.fromRGB(0, 255, 100)
 statusLabel.TextSize = 15
 statusLabel.Font = Enum.Font.GothamBold
-statusLabel.Text = "Status: Đang kích hoạt chế độ siêu tốc..."
+statusLabel.Text = "Status: ĐÃ KÍCH HOẠT SIÊU TỐC TỨC THÌ!"
 statusLabel.Parent = screenGui
 
 local uiCorner = Instance.new("UICorner")
-uiCorner.CornerRadius = UDim.new(0, 8)
+uiCorner.CornerRadius = UDim.new(0, 6)
 uiCorner.Parent = statusLabel
 
 local function updateStatus(text)
     statusLabel.Text = "Status: " .. text
 end
 
--- 2. Hệ thống Tween nhanh & chống Anti-Cheat Kick/Ban
-local function safeTween(targetCFrame)
+-- 2. Hàm Tween siêu tốc độ lập tức
+local function instantTween(targetCFrame)
     local char = LocalPlayer.Character
     if not char or not char:FindFirstChild("HumanoidRootPart") then return end
     local hrp = char.HumanoidRootPart
     
     local distance = (hrp.Position - targetCFrame.Position).Magnitude
-    local timeTravel = distance / getgenv().UltimateConfig.TweenSpeed
-    
-    -- Kiểm tra nếu khoảng cách quá lớn, dùng ngắt quãng nhỏ để server không phát hiện teleport bất thường
-    if distance > 1000 then
-        hrp.CFrame = targetCFrame
-        task.wait(0.1)
-        return
-    end
+    local timeTravel = distance / getgenv().InstantConfig.TweenSpeed
     
     local tweenInfo = TweenInfo.new(timeTravel, Enum.EasingStyle.Linear)
     local tween = TweenService:Create(hrp, tweenInfo, {CFrame = targetCFrame})
     tween:Play()
-    tween.Completed:Wait()
 end
 
--- 3. Chống AFK
+-- 3. Chống AFK lập tức
 task.spawn(function()
     local vu = game:GetService("VirtualUser")
     LocalPlayer.Idled:Connect(function()
         vu:Button2Down(Vector2.new(0,0), Workspace.CurrentCamera.CFrame)
-        task.wait(1)
+        task.wait(0.5)
         vu:Button2Up(Vector2.new(0,0), Workspace.CurrentCamera.CFrame)
     end)
 end)
 
--- 4. Tự động chọn phe
+-- 4. Chọn phe ngay lập tức khi vào game
 task.spawn(function()
     pcall(function()
         if LocalPlayer.Team == nil then
-            CommF_:InvokeServer("SetTeam", getgenv().UltimateConfig.Team)
-            task.wait(3)
+            CommF_:InvokeServer("SetTeam", getgenv().InstantConfig.Team)
         end
     end)
 end)
 
--- 5. Kỹ thuật Đánh Siêu Nhanh (Fast Attack Bypass Server)
+-- 5. Fast Attack kích hoạt với độ trễ gần như bằng 0 (0.01 giây)
 task.spawn(function()
-    while task.wait(0.05) do
-        if getgenv().UltimateConfig.FastAttack then
+    while task.wait(0.01) do
+        if getgenv().InstantConfig.FastAttack then
             pcall(function()
-                -- Kích hoạt bộ gửi đòn đánh liên tục (bypassing cooldown hiển thị của game)
                 local combatFramework = debug.getupvalues(require(LocalPlayer.PlayerScripts.CombatFramework))
                 local c = combatFramework[2]
                 if c and c.activeController then
                     c.activeController.timeToNextAttack = 0
-                    c.activeController.hitboxMagnitude = 60 -- Tăng tầm đánh rộng
+                    c.activeController.hitboxMagnitude = 70
                     c.activeController:attack()
                 end
             end)
@@ -106,46 +95,40 @@ task.spawn(function()
     end
 end)
 
--- 6. Vòng lặp chính xử lý Nhặt Trái, Mua Võ & Chuyển Sea
+-- 6. Vòng lặp phản ứng cực nhanh không giật lag
 task.spawn(function()
-    while task.wait(0.5) do
+    while task.wait(0.1) do -- Giảm độ trễ xuống mức tối đa để chạy ngay lập tức
         pcall(function()
             local level = LocalPlayer.Data.Level.Value
             
-            -- A. Tự động đổi Sea khi đủ Level
+            -- Chuyển Sea ngay lập tức khi đủ cấp
             if level >= 700 and game.PlaceId == 2753915549 then
-                updateStatus("Đạt Level 700 -> Chuyển sang Sea 2 tự động...")
+                updateStatus("Đạt Level 700 -> Bay sang Sea 2 NGAY LẬP TỨC!")
                 CommF_:InvokeServer("GetUnlockMilitaryDetective")
-                task.wait(1)
                 CommF_:InvokeServer("UnlockMilitaryDetective")
-                task.wait(1)
                 CommF_:InvokeServer("TravelDressrosa")
                 return
             elseif level >= 1500 and game.PlaceId == 4442272183 then
-                updateStatus("Đạt Level 1500 -> Chuyển sang Sea 3 tự động...")
+                updateStatus("Đạt Level 1500 -> Bay sang Sea 3 NGAY LẬP TỨC!")
                 CommF_:InvokeServer("TravelZou")
-                task.wait(1)
                 return
             end
 
-            -- B. Tự động Nhặt & Cất Trái Cây
-            if getgenv().UltimateConfig.AutoFruit then
+            -- Nhặt trái cây siêu tốc ngay khi vừa xuất hiện trong server
+            if getgenv().InstantConfig.AutoFruit then
                 for _, v in pairs(Workspace:GetChildren()) do
                     if v:IsA("Tool") and v.Name:find("Fruit") then
-                        updateStatus("Phát hiện trái: " .. v.Name .. " -> Bay tốc độ cao để nhặt!")
+                        updateStatus("PHÁT HIỆN TRÁI: " .. v.Name .. " -> LAO TỚI NHẶT NGAY!")
                         if v:FindFirstChild("Handle") then
-                            safeTween(v.Handle.CFrame)
-                            task.wait(0.3)
+                            instantTween(v.Handle.CFrame)
+                            task.wait(0.2)
                             firetouchinterest(LocalPlayer.Character.HumanoidRootPart, v.Handle, 0)
                             firetouchinterest(LocalPlayer.Character.HumanoidRootPart, v.Handle, 1)
-                            task.wait(0.5)
                             
-                            -- Cất vào kho
+                            -- Cất kho lập tức
                             for _, item in pairs(LocalPlayer.Backpack:GetChildren()) do
                                 if item:IsA("Tool") and item.Name:find("Fruit") then
-                                    updateStatus("Đang cất trái " .. item.Name .. " vào kho...")
                                     CommF_:InvokeServer("StoreFruit", item)
-                                    task.wait(0.5)
                                 end
                             end
                         end
@@ -154,14 +137,14 @@ task.spawn(function()
                 end
             end
 
-            -- C. Tự động Mua Võ
-            if getgenv().UltimateConfig.AutoBuyStyle then
-                CommF_:InvokeServer("BuyItem", getgenv().UltimateConfig.FightingStyle)
+            -- Tự động mua võ liên tục
+            if getgenv().InstantConfig.AutoBuyStyle then
+                CommF_:InvokeServer("BuyItem", getgenv().InstantConfig.FightingStyle)
             end
 
-            updateStatus("Level: " + level + " | Chế độ Fast Attack & Săn Trái đang chạy...")
+            updateStatus("Level: " .. level .. " | Sẵn sàng chiến đấu & Săn trái siêu tốc...")
         end)
     end
 end)
 
-print("Ultimate Kaitun đã nạp thành công!")
+print("Đã bật chế độ SIÊU TỐC TỨC THÌ!")
