@@ -1,0 +1,50 @@
+-- Tạo GUI đơn giản để bật script ApexHub
+local player = game.Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "ApexHubLoader"
+screenGui.ResetOnSpawn = false
+screenGui.Parent = playerGui
+
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0, 200, 0, 60)
+frame.Position = UDim2.new(0.5, -100, 0.5, -30)
+frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+frame.BorderSizePixel = 0
+frame.Parent = screenGui
+
+local button = Instance.new("TextButton")
+button.Size = UDim2.new(1, -20, 1, -20)
+button.Position = UDim2.new(0, 10, 0, 10)
+button.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+button.TextColor3 = Color3.new(1, 1, 1)
+button.Font = Enum.Font.SourceSansBold
+button.TextSize = 20
+button.Text = "Bật Script"
+button.Parent = frame
+
+local isRunning = false
+
+button.MouseButton1Click:Connect(function()
+    if not isRunning then
+        isRunning = true
+        button.Text = "Đang chạy..."
+        button.BackgroundColor3 = Color3.fromRGB(255, 100, 100)
+        -- Thực thi script với pcall để bắt lỗi
+        local success, err = pcall(function()
+            loadstring(game:HttpGet("https://apexhubeditor.vercel.app/api/raw?name=K1IsJbcneCVBJZU6odtdTdBkK9j2_kaitunxtzuy"))()
+        end)
+        if not success then
+            warn("Lỗi khi chạy script: " .. tostring(err))
+            isRunning = false
+            button.Text = "Bật Script"
+            button.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+        else
+            print("Script đã được bật thành công!")
+            button.Text = "Đã bật (không thể tắt)"
+            button.BackgroundColor3 = Color3.fromRGB(100, 255, 100)
+            button.AutoButtonColor = false
+        end
+    end
+end)
