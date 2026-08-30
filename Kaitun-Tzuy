@@ -1,7 +1,7 @@
--- TzuyHub - TLS Menu (Dark Theme) + Code Đóng/Mở
+-- TzuyHub - TLS Menu (Dark Theme) - Updated Image ID
 local CoreGui = game:GetService("CoreGui")
 
--- Xóa UI cũ nếu có để tránh lỗi trùng lặp
+-- Xóa UI cũ nếu có để tránh trùng lặp
 if CoreGui:FindFirstChild("TzuyHub_TLS") then
     CoreGui.TzuyHub_TLS:Destroy()
 end
@@ -11,20 +11,15 @@ ScreenGui.Name = "TzuyHub_TLS"
 ScreenGui.Parent = CoreGui
 ScreenGui.ResetOnSpawn = false
 
--- Nút Ảnh để Mở/Đóng Menu (ImageButton)
+-- Nút Ảnh mở/đóng Menu (Dùng ID mới)
 local ToggleButton = Instance.new("ImageButton")
 ToggleButton.Name = "ToggleButton"
 ToggleButton.Parent = ScreenGui
-ToggleButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-ToggleButton.BorderSizePixel = 0
-ToggleButton.Position = UDim2.new(0, 50, 0, 50)
+ToggleButton.BackgroundTransparency = 1 
+ToggleButton.Position = UDim2.new(0, 15, 0, 75) 
 ToggleButton.Size = UDim2.new(0, 45, 0, 45)
-ToggleButton.Image = "rbxassetid://74047684870737"
-ToggleButton.Draggable = true -- Có thể kéo thả nút trên màn hình
-
-local ToggleCorner = Instance.new("UICorner")
-ToggleCorner.CornerRadius = UDim.new(0, 10)
-ToggleCorner.Parent = ToggleButton
+ToggleButton.Image = "rbxassetid://110204868627822"
+ToggleButton.Draggable = true
 
 -- Khung Menu Chính (Dark Theme)
 local MainFrame = Instance.new("Frame")
@@ -34,8 +29,8 @@ MainFrame.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
 MainFrame.BorderSizePixel = 0
 MainFrame.Position = UDim2.new(0.5, -210, 0.5, -150)
 MainFrame.Size = UDim2.new(0, 420, 0, 300)
-MainFrame.Visible = false -- Mặc định ẩn khi vào game
-MainFrame.Draggable = true -- Có thể kéo thả menu
+MainFrame.Visible = false
+MainFrame.Draggable = true
 
 local MainCorner = Instance.new("UICorner")
 MainCorner.CornerRadius = UDim.new(0, 8)
@@ -53,7 +48,6 @@ local TopCorner = Instance.new("UICorner")
 TopCorner.CornerRadius = UDim.new(0, 8)
 TopCorner.Parent = TopBar
 
--- Sửa phần góc dưới TopBar cho phẳng đẹp
 local TopBarFix = Instance.new("Frame")
 TopBarFix.Parent = TopBar
 TopBarFix.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
@@ -85,15 +79,11 @@ CloseButton.Text = "✕"
 CloseButton.TextColor3 = Color3.fromRGB(180, 180, 180)
 CloseButton.TextSize = 14
 
-
--- ================= CODE XỬ LÝ SỰ KIỆN ĐÓNG / MỞ =================
-
--- 1. Bấm vào nút ảnh ngoài màn hình để Bật/Tắt Menu
+-- ================= SỰ KIỆN ĐÓNG / MỞ =================
 ToggleButton.MouseButton1Click:Connect(function()
     MainFrame.Visible = not MainFrame.Visible
 end)
 
--- 2. Bấm vào nút "X" trong menu để Đóng menu
 CloseButton.MouseButton1Click:Connect(function()
     MainFrame.Visible = false
 end)
