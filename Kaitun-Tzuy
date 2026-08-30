@@ -1,301 +1,88 @@
--- TzuyHub - Script Blox Fruits
--- Tiêu đề: TzuyHub | Phụ đề: TLS
--- Tính năng: Menu đóng/mở, Đổi màu chủ đạo (Tối, Sáng, v.v.)
--- Nút toggle dùng ảnh Roblox, không viền xanh
+-- TzuyHub - TLS Menu (Dark Theme)
+local CoreGui = game:GetService("CoreGui")
 
-local Players = game:GetService("Players")
-local UserInputService = game:GetService("UserInputService")
-local LocalPlayer = Players.LocalPlayer
+-- Xóa UI cũ nếu có để tránh trùng lặp
+if CoreGui:FindFirstChild("TzuyHub_TLS") then
+    CoreGui.TzuyHub_TLS:Destroy()
+end
 
--- ID ảnh cho nút mở menu (đổi tại đây)
-local ANH_NUT_MENU = "http://www.roblox.com/asset/?id=74047684870737"
-
--- Tạo ScreenGui
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "TzuyHub"
-ScreenGui.Parent = game.CoreGui
+ScreenGui.Name = "TzuyHub_TLS"
+ScreenGui.Parent = CoreGui
 ScreenGui.ResetOnSpawn = false
 
--- Định nghĩa các chủ đề màu
-local Themes = {
-    Toi = {
-        MainBG = Color3.fromRGB(25, 25, 25),
-        SecondaryBG = Color3.fromRGB(35, 35, 35),
-        Accent = Color3.fromRGB(0, 170, 255),
-        Text = Color3.fromRGB(255, 255, 255),
-        TextSecondary = Color3.fromRGB(200, 200, 200),
-        Button = Color3.fromRGB(45, 45, 45),
-        ButtonHover = Color3.fromRGB(60, 60, 60),
-        Border = Color3.fromRGB(80, 80, 80)
-    },
-    Sang = {
-        MainBG = Color3.fromRGB(240, 240, 240),
-        SecondaryBG = Color3.fromRGB(255, 255, 255),
-        Accent = Color3.fromRGB(0, 120, 255),
-        Text = Color3.fromRGB(0, 0, 0),
-        TextSecondary = Color3.fromRGB(80, 80, 80),
-        Button = Color3.fromRGB(220, 220, 220),
-        ButtonHover = Color3.fromRGB(200, 200, 200),
-        Border = Color3.fromRGB(180, 180, 180)
-    },
-    Mau = {
-        MainBG = Color3.fromRGB(30, 0, 0),
-        SecondaryBG = Color3.fromRGB(50, 0, 0),
-        Accent = Color3.fromRGB(255, 0, 0),
-        Text = Color3.fromRGB(255, 255, 255),
-        TextSecondary = Color3.fromRGB(200, 150, 150),
-        Button = Color3.fromRGB(60, 0, 0),
-        ButtonHover = Color3.fromRGB(90, 0, 0),
-        Border = Color3.fromRGB(150, 0, 0)
-    },
-    Duong = {
-        MainBG = Color3.fromRGB(0, 20, 40),
-        SecondaryBG = Color3.fromRGB(0, 30, 60),
-        Accent = Color3.fromRGB(0, 200, 255),
-        Text = Color3.fromRGB(255, 255, 255),
-        TextSecondary = Color3.fromRGB(180, 220, 240),
-        Button = Color3.fromRGB(0, 40, 80),
-        ButtonHover = Color3.fromRGB(0, 60, 120),
-        Border = Color3.fromRGB(0, 100, 200)
-    }
-}
-
-local CurrentTheme = "Toi"
-local ToggleButton = nil
-local MainFrame = nil
-local UIElements = {} -- Bảng lưu các phần tử cần cập nhật màu
-
--- Hàm áp dụng chủ đề
-local function ApDungChuDe(tenChuDe)
-    local chuDe = Themes[tenChuDe]
-    if not chuDe then return end
-    CurrentTheme = tenChuDe
-    
-    -- Cập nhật tất cả các phần tử UI đã đăng ký
-    for _, element in ipairs(UIElements) do
-        if element.Type == "Frame" then
-            element.Instance.BackgroundColor3 = chuDe.MainBG
-        elseif element.Type == "SecondaryFrame" then
-            element.Instance.BackgroundColor3 = chuDe.SecondaryBG
-        elseif element.Type == "TextLabel" then
-            element.Instance.TextColor3 = chuDe.Text
-        elseif element.Type == "TextButton" then
-            element.Instance.BackgroundColor3 = chuDe.Button
-            element.Instance.TextColor3 = chuDe.Text
-        elseif element.Type == "ScrollingFrame" then
-            element.Instance.BackgroundColor3 = chuDe.SecondaryBG
-        end
-    end
-end
-
--- Hàm đăng ký phần tử để áp dụng chủ đề
-local function DangKyPhanTu(element, elementType)
-    table.insert(UIElements, {Instance = element, Type = elementType})
-end
-
--- Tạo nút toggle dùng ImageButton với ảnh Roblox
-ToggleButton = Instance.new("ImageButton")
-ToggleButton.Size = UDim2.new(0, 50, 0, 50)
-ToggleButton.Position = UDim2.new(0, 10, 0.5, -25)
-ToggleButton.BackgroundTransparency = 1
-ToggleButton.Image = ANH_NUT_MENU -- Sử dụng ID ảnh đã định nghĩa
-ToggleButton.ScaleType = Enum.ScaleType.Fit
-ToggleButton.ZIndex = 10
+-- Nút mở/đóng Menu (ImageButton với ID người dùng cung cấp)
+local ToggleButton = Instance.new("ImageButton")
+ToggleButton.Name = "ToggleButton"
 ToggleButton.Parent = ScreenGui
+ToggleButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 ToggleButton.BorderSizePixel = 0
+ToggleButton.Position = UDim2.new(0, 50, 0, 50)
+ToggleButton.Size = UDim2.new(0, 45, 0, 45)
+ToggleButton.Image = "rbxassetid://74047684870737"
+ToggleButton.Draggable = true
 
--- Bo góc cho nút toggle
-local UICorner = Instance.new("UICorner")
-UICorner.CornerRadius = UDim.new(0, 10)
-UICorner.Parent = ToggleButton
+local ToggleCorner = Instance.new("UICorner")
+ToggleCorner.CornerRadius = UDim.new(0, 10)
+ToggleCorner.Parent = ToggleButton
 
--- Tạo khung chính (không viền)
-MainFrame = Instance.new("Frame")
-MainFrame.Size = UDim2.new(0, 500, 0, 350)
-MainFrame.Position = UDim2.new(0.5, -250, 0.5, -175)
-MainFrame.BackgroundColor3 = Themes[CurrentTheme].MainBG
-MainFrame.BorderSizePixel = 0
-MainFrame.Visible = false
-MainFrame.ZIndex = 5
+-- Main Frame (Giao diện chính - Dark Theme)
+local MainFrame = Instance.new("Frame")
+MainFrame.Name = "MainFrame"
 MainFrame.Parent = ScreenGui
+MainFrame.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
+MainFrame.BorderSizePixel = 0
+MainFrame.Position = UDim2.new(0.5, -200, 0.5, -150)
+MainFrame.Size = UDim2.new(0, 420, 0, 300)
+MainFrame.Visible = false
+MainFrame.Draggable = true
 
-DangKyPhanTu(MainFrame, "Frame")
-
--- Bo góc cho khung chính
 local MainCorner = Instance.new("UICorner")
-MainCorner.CornerRadius = UDim.new(0, 12)
+MainCorner.CornerRadius = UDim.new(0, 8)
 MainCorner.Parent = MainFrame
 
--- Tiêu đề và phụ đề
-local TieuDeLabel = Instance.new("TextLabel")
-TieuDeLabel.Size = UDim2.new(1, 0, 0, 40)
-TieuDeLabel.Position = UDim2.new(0, 0, 0, 10)
-TieuDeLabel.BackgroundTransparency = 1
-TieuDeLabel.Text = "TzuyHub"
-TieuDeLabel.Font = Enum.Font.GothamBlack
-TieuDeLabel.TextSize = 28
-TieuDeLabel.TextColor3 = Themes[CurrentTheme].Accent
-TieuDeLabel.Parent = MainFrame
-DangKyPhanTu(TieuDeLabel, "TextLabel") -- Sẽ ghi đè màu sau
+-- Thanh tiêu đề (TopBar)
+local TopBar = Instance.new("Frame")
+TopBar.Name = "TopBar"
+TopBar.Parent = MainFrame
+TopBar.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
+TopBar.BorderSizePixel = 0
+TopBar.Size = UDim2.new(1, 0, 0, 40)
 
-local PhuDeLabel = Instance.new("TextLabel")
-PhuDeLabel.Size = UDim2.new(1, 0, 0, 20)
-PhuDeLabel.Position = UDim2.new(0, 0, 0, 55)
-PhuDeLabel.BackgroundTransparency = 1
-PhuDeLabel.Text = "TLS"
-PhuDeLabel.Font = Enum.Font.GothamMedium
-PhuDeLabel.TextSize = 14
-PhuDeLabel.TextColor3 = Themes[CurrentTheme].TextSecondary
-PhuDeLabel.Parent = MainFrame
-DangKyPhanTu(PhuDeLabel, "TextLabel")
+local TopCorner = Instance.new("UICorner")
+TopCorner.CornerRadius = UDim.new(0, 8)
+TopCorner.Parent = TopBar
 
--- Đường phân cách
-local DuongPhanCach = Instance.new("Frame")
-DuongPhanCach.Size = UDim2.new(1, -20, 0, 1)
-DuongPhanCach.Position = UDim2.new(0, 10, 0, 80)
-DuongPhanCach.BackgroundColor3 = Themes[CurrentTheme].Border
-DuongPhanCach.Parent = MainFrame
-DangKyPhanTu(DuongPhanCach, "Frame") -- Sẽ ghi đè màu viền sau
+-- Tiêu đề "TzuyHub" và Subtitle "TLS"
+local TitleLabel = Instance.new("TextLabel")
+TitleLabel.Parent = TopBar
+TitleLabel.BackgroundTransparency = 1
+TitleLabel.Position = UDim2.new(0, 15, 0, 0)
+TitleLabel.Size = UDim2.new(0, 300, 1, 0)
+TitleLabel.Font = Enum.Font.GothamBold
+TitleLabel.Text = "TzuyHub <font color=\"#888888\">| TLS</font>"
+TitleLabel.RichText = true
+TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+TitleLabel.TextSize = 16
+TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
 
--- Phần chọn chủ đề
-local ChuDeLabel = Instance.new("TextLabel")
-ChuDeLabel.Size = UDim2.new(1, 0, 0, 30)
-ChuDeLabel.Position = UDim2.new(0, 0, 0, 90)
-ChuDeLabel.BackgroundTransparency = 1
-ChuDeLabel.Text = "Đổi Màu Chủ Đạo"
-ChuDeLabel.Font = Enum.Font.GothamBold
-ChuDeLabel.TextSize = 18
-ChuDeLabel.TextColor3 = Themes[CurrentTheme].Text
-ChuDeLabel.Parent = MainFrame
-DangKyPhanTu(ChuDeLabel, "TextLabel")
+-- Nút Đóng (X)
+local CloseButton = Instance.new("TextButton")
+CloseButton.Parent = TopBar
+CloseButton.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
+CloseButton.BackgroundTransparency = 1
+CloseButton.Position = UDim2.new(1, -40, 0, 0)
+CloseButton.Size = UDim2.new(0, 40, 0, 40)
+CloseButton.Font = Enum.Font.GothamBold
+CloseButton.Text = "X"
+CloseButton.TextColor3 = Color3.fromRGB(200, 200, 200)
+CloseButton.TextSize = 14
 
--- Tạo các nút chọn chủ đề
-local NutChuDe = {}
-local TenChuDe = {"Toi", "Sang", "Mau", "Duong"}
-local ViTriX = 10
-for i, tenChuDe in ipairs(TenChuDe) do
-    local nut = Instance.new("TextButton")
-    nut.Size = UDim2.new(0, 100, 0, 35)
-    nut.Position = UDim2.new(0, ViTriX, 0, 125)
-    nut.BackgroundColor3 = Themes[CurrentTheme].Button
-    nut.TextColor3 = Themes[CurrentTheme].Text
-    nut.Text = tenChuDe
-    nut.Font = Enum.Font.GothamMedium
-    nut.TextSize = 14
-    nut.BorderSizePixel = 0
-    nut.Parent = MainFrame
-    DangKyPhanTu(nut, "TextButton")
-    
-    local goc = Instance.new("UICorner")
-    goc.CornerRadius = UDim.new(0, 6)
-    goc.Parent = nut
-    
-    nut.MouseButton1Click:Connect(function()
-        ApDungChuDe(tenChuDe)
-        -- Cập nhật màu tiêu đề, đường phân cách
-        TieuDeLabel.TextColor3 = Themes[tenChuDe].Accent
-        DuongPhanCach.BackgroundColor3 = Themes[tenChuDe].Border
-    end)
-    
-    table.insert(NutChuDe, nut)
-    ViTriX = ViTriX + 115
-end
-
--- Phần chức năng Blox Fruits (placeholder)
-local ChucNangLabel = Instance.new("TextLabel")
-ChucNangLabel.Size = UDim2.new(1, 0, 0, 30)
-ChucNangLabel.Position = UDim2.new(0, 0, 0, 170)
-ChucNangLabel.BackgroundTransparency = 1
-ChucNangLabel.Text = "Chức Năng Blox Fruits"
-ChucNangLabel.Font = Enum.Font.GothamBold
-ChucNangLabel.TextSize = 18
-ChucNangLabel.TextColor3 = Themes[CurrentTheme].Text
-ChucNangLabel.Parent = MainFrame
-DangKyPhanTu(ChucNangLabel, "TextLabel")
-
--- Tạo khung cuộn cho các chức năng
-local KhungCuon = Instance.new("ScrollingFrame")
-KhungCuon.Size = UDim2.new(1, -20, 1, -200)
-KhungCuon.Position = UDim2.new(0, 10, 0, 205)
-KhungCuon.BackgroundColor3 = Themes[CurrentTheme].SecondaryBG
-KhungCuon.BorderSizePixel = 0
-KhungCuon.ScrollBarThickness = 5
-KhungCuon.Parent = MainFrame
-DangKyPhanTu(KhungCuon, "ScrollingFrame")
-
-local UIListLayout = Instance.new("UIListLayout")
-UIListLayout.Padding = UDim.new(0, 5)
-UIListLayout.Parent = KhungCuon
-
--- Nút chức năng mẫu (Tự động farm)
-local NutAutoFarm = Instance.new("TextButton")
-NutAutoFarm.Size = UDim2.new(1, -10, 0, 35)
-NutAutoFarm.BackgroundColor3 = Themes[CurrentTheme].Button
-NutAutoFarm.TextColor3 = Themes[CurrentTheme].Text
-NutAutoFarm.Text = "Tự Động Farm (Chưa code)"
-NutAutoFarm.Font = Enum.Font.GothamMedium
-NutAutoFarm.TextSize = 14
-NutAutoFarm.BorderSizePixel = 0
-NutAutoFarm.Parent = KhungCuon
-DangKyPhanTu(NutAutoFarm, "TextButton")
-
-local goc = Instance.new("UICorner")
-goc.CornerRadius = UDim.new(0, 6)
-goc.Parent = NutAutoFarm
-
-NutAutoFarm.MouseButton1Click:Connect(function()
-    print("Đã click Tự Động Farm - Hãy thêm code của bạn vào đây")
-    -- Thêm code auto farm Blox Fruits của bạn vào đây
-end)
-
--- Hàm đóng/mở menu
-local function DongMoMenu()
+-- Sự kiện ẩn/hiện Menu
+ToggleButton.MouseButton1Click:Connect(function()
     MainFrame.Visible = not MainFrame.Visible
-    if MainFrame.Visible then
-        MainFrame.ZIndex = 10
-        ToggleButton.ZIndex = 11
-    end
-end
-
-ToggleButton.MouseButton1Click:Connect(DongMoMenu)
-
--- Tùy chọn: Đóng/mở bằng phím (ví dụ: RightControl)
-UserInputService.InputBegan:Connect(function(input, gameProcessed)
-    if gameProcessed then return end
-    if input.KeyCode == Enum.KeyCode.RightControl then
-        DongMoMenu()
-    end
 end)
 
--- Áp dụng chủ đề ban đầu
-ApDungChuDe(CurrentTheme)
--- Ghi đè các phần tử có màu đặc biệt
-TieuDeLabel.TextColor3 = Themes[CurrentTheme].Accent
-DuongPhanCach.BackgroundColor3 = Themes[CurrentTheme].Border
-
--- Thêm chức năng kéo thả cho khung chính
-local dangKeo = false
-local diemBatDau = nil
-local viTriBatDau = nil
-
-MainFrame.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 then
-        dangKeo = true
-        diemBatDau = input.Position
-        viTriBatDau = MainFrame.Position
-        input.Changed:Connect(function()
-            if input.UserInputState == Enum.UserInputState.End then
-                dangKeo = false
-            end
-        end)
-    end
+CloseButton.MouseButton1Click:Connect(function()
+    MainFrame.Visible = false
 end)
-
-MainFrame.InputChanged:Connect(function(input)
-    if dangKeo and input.UserInputType == Enum.UserInputType.MouseMovement then
-        local delta = input.Position - diemBatDau
-        MainFrame.Position = UDim2.new(viTriBatDau.X.Scale, viTriBatDau.X.Offset + delta.X, viTriBatDau.Y.Scale, viTriBatDau.Y.Offset + delta.Y)
-    end
-end)
-
-print("TzuyHub đã tải! Nhấn RightControl hoặc click nút ảnh để đóng/mở menu.")
