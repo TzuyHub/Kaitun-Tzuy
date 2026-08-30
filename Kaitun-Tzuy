@@ -1,6 +1,6 @@
 -- TzuyHub - Script Blox Fruits
 -- Tiêu đề: TzuyHub | Phụ đề: TLS
--- Tính năng: Menu đóng/mở, Đổi màu chủ đạo ( tối , sáng, v.v.)
+-- Tính năng: Menu đóng/mở, Đổi màu chủ đạo (Tối, Sáng, v.v.)
 -- Nút toggle dùng ảnh Roblox, không viền xanh
 
 local Players = game:GetService("Players")
@@ -8,7 +8,7 @@ local UserInputService = game:GetService("UserInputService")
 local LocalPlayer = Players.LocalPlayer
 
 -- ID ảnh cho nút mở menu (đổi tại đây)
-local ANH_NUT_MENU = "rbxassetid://74047684870737"
+local ANH_NUT_MENU = "http://www.roblox.com/asset/?id=74047684870737"
 
 -- Tạo ScreenGui
 local ScreenGui = Instance.new("ScreenGui")
