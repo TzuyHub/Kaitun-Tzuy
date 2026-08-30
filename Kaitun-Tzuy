@@ -1,39 +1,94 @@
--- Pseudocode - KHÔNG CHẠY ĐƯỢC TRÊN ROBLOX
-while true do
-    local hasFist = false
-    local chestsOpened = 0
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
 
-    -- Thu thập tối đa 36 rương
-    while chestsOpened < 36 and not hasFist do
-        moveToNearestChest()          -- giả định có hàm di chuyển đến rương gần nhất
-        openChest()
-        if checkItem("Fist of Darkness") then
-            hasFist = true
-        end
-        chestsOpened = chestsOpened + 1
-        wait(1) -- chờ một chút
-    end
+local player = Players.LocalPlayer
+local guiParent = gethui and gethui() or game:GetService("CoreGui")
 
-    if hasFist then
-        -- Triệu hồi Darkbeard
-        moveToDarkArena()
-        useItem("Fist of Darkness")
-        wait(5) -- chờ boss xuất hiện
-
-        -- Tự động đánh boss (giả định có hàm chiến đấu)
-        while bossAlive("Darkbeard") do
-            attackBoss()
-            wait(0.5)
-        end
-
-        -- Kiểm tra rơi đồ
-        if checkItem("Dark Coat") then
-            print("Đã nhận được Áo Choàng Râu Đen!")
-            break  -- thoát vòng lặp
-        end
-    else
-        -- Không có Fist -> nhảy server và được treo 4 tiếng
-        serverHop()          -- giả định có hàm nhảy server
-        wait(4 * 60 * 60)   -- được treo 4 giờ (tính bằng giây)
-    end
+local oldGui = guiParent:FindFirstChild("UniversalCoordsGui")
+if oldGui then
+	oldGui:Destroy()
 end
+
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "UniversalCoordsGui"
+screenGui.ResetOnSpawn = false
+screenGui.Parent = guiParent
+
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0, 320, 0, 70)
+frame.Position = UDim2.new(0, 20, 0, 20)
+frame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+frame.BackgroundTransparency = 0.2
+frame.BorderSizePixel = 0
+frame.Parent = screenGui
+
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(1, 0, 0, 25)
+title.BackgroundTransparency = 1
+title.Text = "Toa do hien tai"
+title.TextColor3 = Color3.fromRGB(255, 255, 255)
+title.TextScaled = true
+title.Font = Enum.Font.SourceSansBold
+title.Parent = frame
+
+local label = Instance.new("TextLabel")
+label.Size = UDim2.new(1, -10, 0, 25)
+label.Position = UDim2.new(0, 5, 0, 28)
+label.BackgroundTransparency = 1
+label.Text = "Dang tai..."
+label.TextColor3 = Color3.fromRGB(0, 255, 127)
+label.TextScaled = true
+label.Font = Enum.Font.Code
+label.Parent = frame
+
+local hint = Instance.new("TextLabel")
+hint.Size = UDim2.new(1, -10, 0, 15)
+hint.Position = UDim2.new(0, 5, 0, 52)
+hint.BackgroundTransparency = 1
+hint.Text = "Nhan K de copy Vector3"
+hint.TextColor3 = Color3.fromRGB(200, 200, 200)
+hint.TextScaled = true
+hint.Font = Enum.Font.SourceSans
+hint.Parent = frame
+
+local function getRoot(character)
+	if not character then
+		return nil
+	end
+
+	return character:FindFirstChild("HumanoidRootPart")
+		or character:FindFirstChild("Torso")
+		or character:FindFirstChild("UpperTorso")
+		or character.PrimaryPart
+end
+
+local lastVectorText = "Vector3.new(0, 0, 0)"
+
+RunService.RenderStepped:Connect(function()
+	local character = player.Character or player.CharacterAdded:Wait()
+	local root = getRoot(character)
+
+	if root then
+		local pos = root.Position
+		label.Text = string.format("X: %.2f | Y: %.2f | Z: %.2f", pos.X, pos.Y, pos.Z)
+		lastVectorText = string.format("Vector3.new(%.2f, %.2f, %.2f)", pos.X, pos.Y, pos.Z)
+	else
+		label.Text = "Khong tim thay root part"
+	end
+end)
+
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+	if gameProcessed then
+		return
+	end
+
+	if input.KeyCode == Enum.KeyCode.K then
+		if setclipboard then
+			setclipboard(lastVectorText)
+			label.Text = "Da copy: " .. lastVectorText
+		else
+			label.Text = "Executor khong ho tro setclipboard"
+		end
+	end
+end)
