@@ -1,7 +1,7 @@
--- TzuyHub - TLS Menu (Dark Theme)
+-- TzuyHub - TLS Menu (Dark Theme) + Code Đóng/Mở
 local CoreGui = game:GetService("CoreGui")
 
--- Xóa UI cũ nếu có để tránh trùng lặp
+-- Xóa UI cũ nếu có để tránh lỗi trùng lặp
 if CoreGui:FindFirstChild("TzuyHub_TLS") then
     CoreGui.TzuyHub_TLS:Destroy()
 end
@@ -11,7 +11,7 @@ ScreenGui.Name = "TzuyHub_TLS"
 ScreenGui.Parent = CoreGui
 ScreenGui.ResetOnSpawn = false
 
--- Nút mở/đóng Menu (ImageButton với ID người dùng cung cấp)
+-- Nút Ảnh để Mở/Đóng Menu (ImageButton)
 local ToggleButton = Instance.new("ImageButton")
 ToggleButton.Name = "ToggleButton"
 ToggleButton.Parent = ScreenGui
@@ -20,38 +20,46 @@ ToggleButton.BorderSizePixel = 0
 ToggleButton.Position = UDim2.new(0, 50, 0, 50)
 ToggleButton.Size = UDim2.new(0, 45, 0, 45)
 ToggleButton.Image = "rbxassetid://74047684870737"
-ToggleButton.Draggable = true
+ToggleButton.Draggable = true -- Có thể kéo thả nút trên màn hình
 
 local ToggleCorner = Instance.new("UICorner")
 ToggleCorner.CornerRadius = UDim.new(0, 10)
 ToggleCorner.Parent = ToggleButton
 
--- Main Frame (Giao diện chính - Dark Theme)
+-- Khung Menu Chính (Dark Theme)
 local MainFrame = Instance.new("Frame")
 MainFrame.Name = "MainFrame"
 MainFrame.Parent = ScreenGui
 MainFrame.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
 MainFrame.BorderSizePixel = 0
-MainFrame.Position = UDim2.new(0.5, -200, 0.5, -150)
+MainFrame.Position = UDim2.new(0.5, -210, 0.5, -150)
 MainFrame.Size = UDim2.new(0, 420, 0, 300)
-MainFrame.Visible = false
-MainFrame.Draggable = true
+MainFrame.Visible = false -- Mặc định ẩn khi vào game
+MainFrame.Draggable = true -- Có thể kéo thả menu
 
 local MainCorner = Instance.new("UICorner")
 MainCorner.CornerRadius = UDim.new(0, 8)
 MainCorner.Parent = MainFrame
 
--- Thanh tiêu đề (TopBar)
+-- Thanh Tiêu Đề (TopBar)
 local TopBar = Instance.new("Frame")
 TopBar.Name = "TopBar"
 TopBar.Parent = MainFrame
-TopBar.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
+TopBar.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 TopBar.BorderSizePixel = 0
 TopBar.Size = UDim2.new(1, 0, 0, 40)
 
 local TopCorner = Instance.new("UICorner")
 TopCorner.CornerRadius = UDim.new(0, 8)
 TopCorner.Parent = TopBar
+
+-- Sửa phần góc dưới TopBar cho phẳng đẹp
+local TopBarFix = Instance.new("Frame")
+TopBarFix.Parent = TopBar
+TopBarFix.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+TopBarFix.BorderSizePixel = 0
+TopBarFix.Position = UDim2.new(0, 0, 1, -8)
+TopBarFix.Size = UDim2.new(1, 0, 0, 8)
 
 -- Tiêu đề "TzuyHub" và Subtitle "TLS"
 local TitleLabel = Instance.new("TextLabel")
@@ -63,26 +71,29 @@ TitleLabel.Font = Enum.Font.GothamBold
 TitleLabel.Text = "TzuyHub <font color=\"#888888\">| TLS</font>"
 TitleLabel.RichText = true
 TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-TitleLabel.TextSize = 16
+TitleLabel.TextSize = 15
 TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
 
--- Nút Đóng (X)
+-- Nút Đóng (X) bên trong Menu
 local CloseButton = Instance.new("TextButton")
 CloseButton.Parent = TopBar
-CloseButton.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
 CloseButton.BackgroundTransparency = 1
 CloseButton.Position = UDim2.new(1, -40, 0, 0)
 CloseButton.Size = UDim2.new(0, 40, 0, 40)
 CloseButton.Font = Enum.Font.GothamBold
-CloseButton.Text = "X"
-CloseButton.TextColor3 = Color3.fromRGB(200, 200, 200)
+CloseButton.Text = "✕"
+CloseButton.TextColor3 = Color3.fromRGB(180, 180, 180)
 CloseButton.TextSize = 14
 
--- Sự kiện ẩn/hiện Menu
+
+-- ================= CODE XỬ LÝ SỰ KIỆN ĐÓNG / MỞ =================
+
+-- 1. Bấm vào nút ảnh ngoài màn hình để Bật/Tắt Menu
 ToggleButton.MouseButton1Click:Connect(function()
     MainFrame.Visible = not MainFrame.Visible
 end)
 
+-- 2. Bấm vào nút "X" trong menu để Đóng menu
 CloseButton.MouseButton1Click:Connect(function()
     MainFrame.Visible = false
 end)
