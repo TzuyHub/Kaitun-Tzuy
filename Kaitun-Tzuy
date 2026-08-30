@@ -1,13 +1,11 @@
 -- TzuyHub - Blox Fruits Script Hub
 -- Title: TzuyHub | Subtitle: TLS
 -- Features: Open/Close Menu, Theme Changer (Dark, Light, etc.)
--- Custom toggle button using image asset ID, no blue border
+-- Simple toggle button (no image, no blue border)
 
 local Players = game:GetService("Players")
-local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
 local LocalPlayer = Players.LocalPlayer
-local Mouse = LocalPlayer:GetMouse()
 
 -- Create ScreenGui
 local ScreenGui = Instance.new("ScreenGui")
@@ -83,7 +81,6 @@ local function ApplyTheme(themeName)
             element.Instance.TextColor3 = theme.Text
         elseif element.Type == "ScrollingFrame" then
             element.Instance.BackgroundColor3 = theme.SecondaryBG
-            element.Instance.BorderColor3 = theme.Border
         end
     end
 end
@@ -93,39 +90,30 @@ local function RegisterElement(element, elementType)
     table.insert(UIElements, {Instance = element, Type = elementType})
 end
 
--- Create Toggle Button (floating) with custom image
+-- Create Toggle Button (simple colored button, no image)
 ToggleButton = Instance.new("TextButton")
 ToggleButton.Size = UDim2.new(0, 50, 0, 50)
 ToggleButton.Position = UDim2.new(0, 10, 0.5, -25)
-ToggleButton.BackgroundColor3 = Color3.new(1, 1, 1)
-ToggleButton.BackgroundTransparency = 1
-ToggleButton.Text = ""
+ToggleButton.BackgroundColor3 = Themes[CurrentTheme].Accent
+ToggleButton.TextColor3 = Color3.new(1, 1, 1)
+ToggleButton.Text = "Tzuy"
 ToggleButton.Font = Enum.Font.GothamBold
 ToggleButton.TextSize = 14
 ToggleButton.ZIndex = 10
 ToggleButton.Parent = ScreenGui
 ToggleButton.BorderSizePixel = 0
 
--- Custom image for toggle button
-local ToggleImage = Instance.new("ImageLabel")
-ToggleImage.Size = UDim2.new(1, 0, 1, 0)
-ToggleImage.Position = UDim2.new(0, 0, 0, 0)
-ToggleImage.BackgroundTransparency = 1
-ToggleImage.Image = "rbxassetid://74047684870737"
-ToggleImage.ScaleType = Enum.ScaleType.Fit
-ToggleImage.Parent = ToggleButton
-
--- Rounded corners for toggle (optional)
+-- Rounded corners for toggle
 local UICorner = Instance.new("UICorner")
 UICorner.CornerRadius = UDim.new(0, 10)
 UICorner.Parent = ToggleButton
 
--- Create Main Frame (no blue border)
+-- Create Main Frame (no border)
 MainFrame = Instance.new("Frame")
 MainFrame.Size = UDim2.new(0, 500, 0, 350)
 MainFrame.Position = UDim2.new(0.5, -250, 0.5, -175)
 MainFrame.BackgroundColor3 = Themes[CurrentTheme].MainBG
-MainFrame.BorderSizePixel = 0  -- Remove border entirely
+MainFrame.BorderSizePixel = 0
 MainFrame.Visible = false
 MainFrame.ZIndex = 5
 MainFrame.Parent = ScreenGui
@@ -203,9 +191,10 @@ for i, themeName in ipairs(ThemeNames) do
     
     button.MouseButton1Click:Connect(function()
         ApplyTheme(themeName)
-        -- Update title color and separator
+        -- Update title color, separator, toggle button color
         TitleLabel.TextColor3 = Themes[themeName].Accent
         Separator.BackgroundColor3 = Themes[themeName].Border
+        ToggleButton.BackgroundColor3 = Themes[themeName].Accent
     end)
     
     table.insert(ThemeButtons, button)
@@ -229,7 +218,7 @@ local FuncScroll = Instance.new("ScrollingFrame")
 FuncScroll.Size = UDim2.new(1, -20, 1, -200)
 FuncScroll.Position = UDim2.new(0, 10, 0, 205)
 FuncScroll.BackgroundColor3 = Themes[CurrentTheme].SecondaryBG
-FuncScroll.BorderSizePixel = 0  -- no border
+FuncScroll.BorderSizePixel = 0
 FuncScroll.ScrollBarThickness = 5
 FuncScroll.Parent = MainFrame
 RegisterElement(FuncScroll, "ScrollingFrame")
@@ -283,6 +272,7 @@ ApplyTheme(CurrentTheme)
 -- Override specific elements that have special colors
 TitleLabel.TextColor3 = Themes[CurrentTheme].Accent
 Separator.BackgroundColor3 = Themes[CurrentTheme].Border
+ToggleButton.BackgroundColor3 = Themes[CurrentTheme].Accent
 
 -- Add drag functionality to main frame
 local dragging = false
