@@ -1,104 +1,97 @@
--- TzuyHub - TLS Menu (Dark Theme) - Fix Image ID Loading
-local CoreGui = game:GetService("CoreGui")
-local InsertService = game:GetService("InsertService")
-
--- Xóa UI cũ nếu có
-if CoreGui:FindFirstChild("TzuyHub_TLS") then
-    CoreGui.TzuyHub_TLS:Destroy()
-end
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
 
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "TzuyHub_TLS"
-ScreenGui.Parent = CoreGui
+ScreenGui.Name = "TzuyHub"
 ScreenGui.ResetOnSpawn = false
+ScreenGui.Parent = player:WaitForChild("PlayerGui")
 
--- XỬ LÝ ID ẢNH: Chuyển đổi Asset ID sang Decal ID thực tế để hiển thị
-local rawAssetId = 110204868627822 -- ID bạn cung cấp
-local imageConvertedId = rawAssetId -- Giả sử là ID chuẩn, nếu lỗi sẽ tự fix bên dưới
+-- Nút mở menu
+local ImageButton = Instance.new("ImageButton")
+ImageButton.Name = "OpenButton"
+ImageButton.Size = UDim2.new(0, 60, 0, 60)
+ImageButton.Position = UDim2.new(0, 20, 0.5, -30)
+ImageButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+ImageButton.Image = "rbxassetid://110204868627822"
+ImageButton.ScaleType = Enum.ScaleType.Crop
+ImageButton.Parent = ScreenGui
 
--- Tùy chọn: Nếu ID bạn đưa là Link trang web (AssetId) thường bị lỗi,
--- Roblox cần ID của Decal. Nếu vẫn hiện đen, hãy thử thay đổi cách load ảnh:
-local finalImageUrl = "rbxassetid://" .. tostring(rawAssetId) 
--- Lưu ý: Nếu dùng rbxassetid:// mà vẫn đen, nghĩa là ID đó không tồn tại hoặc bị khóa.
+local ButtonCorner = Instance.new("UICorner")
+ButtonCorner.CornerRadius = UDim.new(0, 14)
+ButtonCorner.Parent = ImageButton
 
--- Nút Ảnh mở/đóng Menu
-local ToggleButton = Instance.new("ImageButton")
-ToggleButton.Name = "ToggleButton"
-ToggleButton.Parent = ScreenGui
-ToggleButton.BackgroundTransparency = 1 
-ToggleButton.Position = UDim2.new(0, 15, 0, 75) 
-ToggleButton.Size = UDim2.new(0, 45, 0, 45)
--- Dùng trực tiếp đường dẫn đã xử lý
-ToggleButton.Image = finalImageUrl
-ToggleButton.Draggable = true
-ToggleButton.HoverImage = "rbxassetid://0" -- Thêm hiệu ứng hover nhẹ nếu muốn
+-- Menu chính
+local Menu = Instance.new("Frame")
+Menu.Name = "MainMenu"
+Menu.Size = UDim2.new(0, 330, 0, 220)
+Menu.Position = UDim2.new(0.5, -165, 0.5, -110)
+Menu.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
+Menu.Visible = false
+Menu.Parent = ScreenGui
 
--- === GIAO DIỆN MENU (Giữ nguyên Dark Theme) ===
-local MainFrame = Instance.new("Frame")
-MainFrame.Name = "MainFrame"
-MainFrame.Parent = ScreenGui
-MainFrame.BackgroundColor3 = Color3.fromRGB(18, 18, 18) -- Dark
-MainFrame.BorderSizePixel = 0
-MainFrame.Position = UDim2.new(0.5, -210, 0.5, -150)
-MainFrame.Size = UDim2.new(0, 420, 0, 300)
-MainFrame.Visible = false
-MainFrame.Draggable = true
+local MenuCorner = Instance.new("UICorner")
+MenuCorner.CornerRadius = UDim.new(0, 14)
+MenuCorner.Parent = Menu
 
-local MainCorner = Instance.new("UICorner")
-MainCorner.CornerRadius = UDim.new(0, 8)
-MainCorner.Parent = MainFrame
+-- Tiêu đề
+local Title = Instance.new("TextLabel")
+Title.Size = UDim2.new(1, -30, 0, 45)
+Title.Position = UDim2.new(0, 15, 0, 12)
+Title.BackgroundTransparency = 1
+Title.Text = "TzuyHub"
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.TextSize = 27
+Title.Font = Enum.Font.GothamBold
+Title.TextXAlignment = Enum.TextXAlignment.Left
+Title.Parent = Menu
 
--- Thanh Tiêu Đề
-local TopBar = Instance.new("Frame")
-TopBar.Name = "TopBar"
-TopBar.Parent = MainFrame
-TopBar.BackgroundColor3 = Color3.fromRGB(25, 25, 25) -- Darker
-TopBar.BorderSizePixel = 0
-TopBar.Size = UDim2.new(1, 0, 0, 40)
+-- Sub Title
+local SubTitle = Instance.new("TextLabel")
+SubTitle.Size = UDim2.new(1, -30, 0, 25)
+SubTitle.Position = UDim2.new(0, 15, 0, 52)
+SubTitle.BackgroundTransparency = 1
+SubTitle.Text = "TLS"
+SubTitle.TextColor3 = Color3.fromRGB(170, 170, 170)
+SubTitle.TextSize = 15
+SubTitle.Font = Enum.Font.Gotham
+SubTitle.TextXAlignment = Enum.TextXAlignment.Left
+SubTitle.Parent = Menu
 
-local TopCorner = Instance.new("UICorner")
-TopCorner.CornerRadius = UDim.new(0, 8)
-TopCorner.Parent = TopBar
+-- Nút ví dụ
+local TestButton = Instance.new("TextButton")
+TestButton.Size = UDim2.new(1, -30, 0, 45)
+TestButton.Position = UDim2.new(0, 15, 0, 95)
+TestButton.BackgroundColor3 = Color3.fromRGB(37, 37, 37)
+TestButton.Text = "Button"
+TestButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+TestButton.TextSize = 16
+TestButton.Font = Enum.Font.GothamMedium
+TestButton.Parent = Menu
 
-local TopBarFix = Instance.new("Frame")
-TopBarFix.Parent = TopBar
-TopBarFix.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-TopBarFix.BorderSizePixel = 0
-TopBarFix.Position = UDim2.new(0, 0, 1, -8)
-TopBarFix.Size = UDim2.new(1, 0, 0, 8)
+local TestCorner = Instance.new("UICorner")
+TestCorner.CornerRadius = UDim.new(0, 10)
+TestCorner.Parent = TestButton
 
--- Tiêu đề "TzuyHub | TLS"
-local TitleLabel = Instance.new("TextLabel")
-TitleLabel.Parent = TopBar
-TitleLabel.BackgroundTransparency = 1
-TitleLabel.Position = UDim2.new(0, 15, 0, 0)
-TitleLabel.Size = UDim2.new(0, 300, 1, 0)
-TitleLabel.Font = Enum.Font.GothamBold
-TitleLabel.Text = "TzuyHub <font color=\"#888888\">| TLS</font>"
-TitleLabel.RichText = true
-TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-TitleLabel.TextSize = 15
-TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
-
--- Nút Đóng (X)
+-- Nút đóng
 local CloseButton = Instance.new("TextButton")
-CloseButton.Parent = TopBar
-CloseButton.BackgroundTransparency = 1
-CloseButton.Position = UDim2.new(1, -40, 0, 0)
-CloseButton.Size = UDim2.new(0, 40, 0, 40)
+CloseButton.Size = UDim2.new(0, 35, 0, 35)
+CloseButton.Position = UDim2.new(1, -47, 0, 12)
+CloseButton.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+CloseButton.Text = "×"
+CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+CloseButton.TextSize = 22
 CloseButton.Font = Enum.Font.GothamBold
-CloseButton.Text = "✕"
-CloseButton.TextColor3 = Color3.fromRGB(180, 180, 180)
-CloseButton.TextSize = 14
+CloseButton.Parent = Menu
 
--- ================= SỰ KIỆN ĐÓNG / MỞ =================
-ToggleButton.MouseButton1Click:Connect(function()
-    MainFrame.Visible = not MainFrame.Visible
+local CloseCorner = Instance.new("UICorner")
+CloseCorner.CornerRadius = UDim.new(0, 10)
+CloseCorner.Parent = CloseButton
+
+-- Mở / đóng menu
+ImageButton.MouseButton1Click:Connect(function()
+    Menu.Visible = not Menu.Visible
 end)
 
 CloseButton.MouseButton1Click:Connect(function()
-    MainFrame.Visible = false
+    Menu.Visible = false
 end)
-
--- Kiểm tra lỗi console (nếu ảnh bị lỗi Roblox sẽ báo đỏ)
-print("TzuyHub TLS loaded. Image ID:", finalImageUrl)
