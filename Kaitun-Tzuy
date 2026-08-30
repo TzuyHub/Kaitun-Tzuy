@@ -1,97 +1,119 @@
+--// TzuyHub - Dark GUI
+--// Title: TzuyHub
+--// Sub Title: TLS
+
 local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+
 local player = Players.LocalPlayer
 
+--// ScreenGui
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "TzuyHub"
 ScreenGui.ResetOnSpawn = false
 ScreenGui.Parent = player:WaitForChild("PlayerGui")
 
--- Nút mở menu
+--// Main Menu
+local MainFrame = Instance.new("Frame")
+MainFrame.Name = "MainFrame"
+MainFrame.Size = UDim2.new(0, 500, 0, 320)
+MainFrame.Position = UDim2.new(0.5, -250, 0.5, -160)
+MainFrame.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
+MainFrame.BorderSizePixel = 0
+MainFrame.Parent = ScreenGui
+
+local MainCorner = Instance.new("UICorner")
+MainCorner.CornerRadius = UDim.new(0, 12)
+MainCorner.Parent = MainFrame
+
+--// Title
+local Title = Instance.new("TextLabel")
+Title.Name = "Title"
+Title.BackgroundTransparency = 1
+Title.Position = UDim2.new(0, 20, 0, 12)
+Title.Size = UDim2.new(1, -40, 0, 35)
+Title.Font = Enum.Font.GothamBold
+Title.Text = "Tzuy Hub"
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.TextSize = 24
+Title.TextXAlignment = Enum.TextXAlignment.Left
+Title.Parent = MainFrame
+
+--// Sub Title
+local SubTitle = Instance.new("TextLabel")
+SubTitle.Name = "SubTitle"
+SubTitle.BackgroundTransparency = 1
+SubTitle.Position = UDim2.new(0, 22, 0, 45)
+SubTitle.Size = UDim2.new(1, -44, 0, 25)
+SubTitle.Font = Enum.Font.Gotham
+SubTitle.Text = "TLS"
+SubTitle.TextColor3 = Color3.fromRGB(150, 150, 150)
+SubTitle.TextSize = 14
+SubTitle.TextXAlignment = Enum.TextXAlignment.Left
+SubTitle.Parent = MainFrame
+
+--// Nút mở menu
 local ImageButton = Instance.new("ImageButton")
-ImageButton.Name = "OpenButton"
-ImageButton.Size = UDim2.new(0, 60, 0, 60)
-ImageButton.Position = UDim2.new(0, 20, 0.5, -30)
-ImageButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-ImageButton.Image = "rbxassetid://110204868627822"
-ImageButton.ScaleType = Enum.ScaleType.Crop
+ImageButton.Name = "OpenMenu"
+ImageButton.Image = "rbxassetid://120210404674531"
+ImageButton.Size = UDim2.new(0, 55, 0, 55)
+ImageButton.Position = UDim2.new(0, 20, 0.5, -27)
+ImageButton.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+ImageButton.BorderSizePixel = 0
 ImageButton.Parent = ScreenGui
 
 local ButtonCorner = Instance.new("UICorner")
-ButtonCorner.CornerRadius = UDim.new(0, 14)
+ButtonCorner.CornerRadius = UDim.new(1, 0)
 ButtonCorner.Parent = ImageButton
 
--- Menu chính
-local Menu = Instance.new("Frame")
-Menu.Name = "MainMenu"
-Menu.Size = UDim2.new(0, 330, 0, 220)
-Menu.Position = UDim2.new(0.5, -165, 0.5, -110)
-Menu.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
-Menu.Visible = false
-Menu.Parent = ScreenGui
+--// Viền nút
+local Stroke = Instance.new("UIStroke")
+Stroke.Color = Color3.fromRGB(70, 70, 70)
+Stroke.Thickness = 2
+Stroke.Parent = ImageButton
 
-local MenuCorner = Instance.new("UICorner")
-MenuCorner.CornerRadius = UDim.new(0, 14)
-MenuCorner.Parent = Menu
+--// Mở / đóng menu
+local Open = true
 
--- Tiêu đề
-local Title = Instance.new("TextLabel")
-Title.Size = UDim2.new(1, -30, 0, 45)
-Title.Position = UDim2.new(0, 15, 0, 12)
-Title.BackgroundTransparency = 1
-Title.Text = "TzuyHub"
-Title.TextColor3 = Color3.fromRGB(255, 255, 255)
-Title.TextSize = 27
-Title.Font = Enum.Font.GothamBold
-Title.TextXAlignment = Enum.TextXAlignment.Left
-Title.Parent = Menu
-
--- Sub Title
-local SubTitle = Instance.new("TextLabel")
-SubTitle.Size = UDim2.new(1, -30, 0, 25)
-SubTitle.Position = UDim2.new(0, 15, 0, 52)
-SubTitle.BackgroundTransparency = 1
-SubTitle.Text = "TLS"
-SubTitle.TextColor3 = Color3.fromRGB(170, 170, 170)
-SubTitle.TextSize = 15
-SubTitle.Font = Enum.Font.Gotham
-SubTitle.TextXAlignment = Enum.TextXAlignment.Left
-SubTitle.Parent = Menu
-
--- Nút ví dụ
-local TestButton = Instance.new("TextButton")
-TestButton.Size = UDim2.new(1, -30, 0, 45)
-TestButton.Position = UDim2.new(0, 15, 0, 95)
-TestButton.BackgroundColor3 = Color3.fromRGB(37, 37, 37)
-TestButton.Text = "Button"
-TestButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-TestButton.TextSize = 16
-TestButton.Font = Enum.Font.GothamMedium
-TestButton.Parent = Menu
-
-local TestCorner = Instance.new("UICorner")
-TestCorner.CornerRadius = UDim.new(0, 10)
-TestCorner.Parent = TestButton
-
--- Nút đóng
-local CloseButton = Instance.new("TextButton")
-CloseButton.Size = UDim2.new(0, 35, 0, 35)
-CloseButton.Position = UDim2.new(1, -47, 0, 12)
-CloseButton.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-CloseButton.Text = "×"
-CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-CloseButton.TextSize = 22
-CloseButton.Font = Enum.Font.GothamBold
-CloseButton.Parent = Menu
-
-local CloseCorner = Instance.new("UICorner")
-CloseCorner.CornerRadius = UDim.new(0, 10)
-CloseCorner.Parent = CloseButton
-
--- Mở / đóng menu
 ImageButton.MouseButton1Click:Connect(function()
-    Menu.Visible = not Menu.Visible
+	Open = not Open
+	MainFrame.Visible = Open
 end)
 
-CloseButton.MouseButton1Click:Connect(function()
-    Menu.Visible = false
+--// Kéo nút
+local dragging = false
+local dragStart
+local startPos
+
+ImageButton.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1
+		or input.UserInputType == Enum.UserInputType.Touch then
+		
+		dragging = true
+		dragStart = input.Position
+		startPos = ImageButton.Position
+		
+		input.Changed:Connect(function()
+			if input.UserInputState == Enum.UserInputState.End then
+				dragging = false
+			end
+		end)
+	end
+end)
+
+UserInputService.InputChanged:Connect(function(input)
+	if dragging and (
+		input.UserInputType == Enum.UserInputType.MouseMovement
+		or input.UserInputType == Enum.UserInputType.Touch
+	) then
+		
+		local delta = input.Position - dragStart
+		
+		ImageButton.Position = UDim2.new(
+			startPos.X.Scale,
+			startPos.X.Offset + delta.X,
+			startPos.Y.Scale,
+			startPos.Y.Offset + delta.Y
+		)
+	end
 end)
