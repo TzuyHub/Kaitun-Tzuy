@@ -1,6 +1,6 @@
 -- TzuyHub - Script Blox Fruits
 -- Tiêu đề: TzuyHub | Phụ đề: TLS
--- Tính năng: Menu đóng/mở, Đổi màu chủ đạo (Dark, Light, ...)
+-- Tính năng: Menu đóng/mở, Đổi màu chủ đạo ( tối , sáng, v.v.)
 -- Nút toggle dùng ảnh Roblox, không viền xanh
 
 local Players = game:GetService("Players")
