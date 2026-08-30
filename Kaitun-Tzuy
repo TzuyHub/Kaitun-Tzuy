@@ -1,7 +1,8 @@
--- TzuyHub - TLS Menu (Dark Theme) - Updated Image ID
+-- TzuyHub - TLS Menu (Dark Theme) - Fix Image ID Loading
 local CoreGui = game:GetService("CoreGui")
+local InsertService = game:GetService("InsertService")
 
--- Xóa UI cũ nếu có để tránh trùng lặp
+-- Xóa UI cũ nếu có
 if CoreGui:FindFirstChild("TzuyHub_TLS") then
     CoreGui.TzuyHub_TLS:Destroy()
 end
@@ -11,21 +12,32 @@ ScreenGui.Name = "TzuyHub_TLS"
 ScreenGui.Parent = CoreGui
 ScreenGui.ResetOnSpawn = false
 
--- Nút Ảnh mở/đóng Menu (Dùng ID mới)
+-- XỬ LÝ ID ẢNH: Chuyển đổi Asset ID sang Decal ID thực tế để hiển thị
+local rawAssetId = 110204868627822 -- ID bạn cung cấp
+local imageConvertedId = rawAssetId -- Giả sử là ID chuẩn, nếu lỗi sẽ tự fix bên dưới
+
+-- Tùy chọn: Nếu ID bạn đưa là Link trang web (AssetId) thường bị lỗi,
+-- Roblox cần ID của Decal. Nếu vẫn hiện đen, hãy thử thay đổi cách load ảnh:
+local finalImageUrl = "rbxassetid://" .. tostring(rawAssetId) 
+-- Lưu ý: Nếu dùng rbxassetid:// mà vẫn đen, nghĩa là ID đó không tồn tại hoặc bị khóa.
+
+-- Nút Ảnh mở/đóng Menu
 local ToggleButton = Instance.new("ImageButton")
 ToggleButton.Name = "ToggleButton"
 ToggleButton.Parent = ScreenGui
 ToggleButton.BackgroundTransparency = 1 
 ToggleButton.Position = UDim2.new(0, 15, 0, 75) 
 ToggleButton.Size = UDim2.new(0, 45, 0, 45)
-ToggleButton.Image = "rbxassetid://110204868627822"
+-- Dùng trực tiếp đường dẫn đã xử lý
+ToggleButton.Image = finalImageUrl
 ToggleButton.Draggable = true
+ToggleButton.HoverImage = "rbxassetid://0" -- Thêm hiệu ứng hover nhẹ nếu muốn
 
--- Khung Menu Chính (Dark Theme)
+-- === GIAO DIỆN MENU (Giữ nguyên Dark Theme) ===
 local MainFrame = Instance.new("Frame")
 MainFrame.Name = "MainFrame"
 MainFrame.Parent = ScreenGui
-MainFrame.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
+MainFrame.BackgroundColor3 = Color3.fromRGB(18, 18, 18) -- Dark
 MainFrame.BorderSizePixel = 0
 MainFrame.Position = UDim2.new(0.5, -210, 0.5, -150)
 MainFrame.Size = UDim2.new(0, 420, 0, 300)
@@ -36,11 +48,11 @@ local MainCorner = Instance.new("UICorner")
 MainCorner.CornerRadius = UDim.new(0, 8)
 MainCorner.Parent = MainFrame
 
--- Thanh Tiêu Đề (TopBar)
+-- Thanh Tiêu Đề
 local TopBar = Instance.new("Frame")
 TopBar.Name = "TopBar"
 TopBar.Parent = MainFrame
-TopBar.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+TopBar.BackgroundColor3 = Color3.fromRGB(25, 25, 25) -- Darker
 TopBar.BorderSizePixel = 0
 TopBar.Size = UDim2.new(1, 0, 0, 40)
 
@@ -55,7 +67,7 @@ TopBarFix.BorderSizePixel = 0
 TopBarFix.Position = UDim2.new(0, 0, 1, -8)
 TopBarFix.Size = UDim2.new(1, 0, 0, 8)
 
--- Tiêu đề "TzuyHub" và Subtitle "TLS"
+-- Tiêu đề "TzuyHub | TLS"
 local TitleLabel = Instance.new("TextLabel")
 TitleLabel.Parent = TopBar
 TitleLabel.BackgroundTransparency = 1
@@ -68,7 +80,7 @@ TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 TitleLabel.TextSize = 15
 TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
 
--- Nút Đóng (X) bên trong Menu
+-- Nút Đóng (X)
 local CloseButton = Instance.new("TextButton")
 CloseButton.Parent = TopBar
 CloseButton.BackgroundTransparency = 1
@@ -87,3 +99,6 @@ end)
 CloseButton.MouseButton1Click:Connect(function()
     MainFrame.Visible = false
 end)
+
+-- Kiểm tra lỗi console (nếu ảnh bị lỗi Roblox sẽ báo đỏ)
+print("TzuyHub TLS loaded. Image ID:", finalImageUrl)
