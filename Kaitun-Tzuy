@@ -1,5 +1,5 @@
---// TzuyHub - Dark GUI
---// Title: TzuyHub
+--// Tzuy Hub - Dark GUI
+--// Title: Tzuy Hub
 --// Sub Title: TLS
 
 local Players = game:GetService("Players")
@@ -9,7 +9,7 @@ local player = Players.LocalPlayer
 
 --// ScreenGui
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "TzuyHub"
+ScreenGui.Name = "Tzuy Hub"
 ScreenGui.ResetOnSpawn = false
 ScreenGui.Parent = player:WaitForChild("PlayerGui")
 
