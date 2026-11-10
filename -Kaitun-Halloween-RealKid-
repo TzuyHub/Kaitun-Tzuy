@@ -1,0 +1,28 @@
+getgenv().Config = getgenv().Config or {
+    Key = "", -- Để trống để dùng getgenv().Key, key đã lưu hoặc nhập qua UI.
+    Team = "Marines",
+    Mode = "Halloween",--"Pumpkin Patch" chỉ farm/hop patch, không tự vào Great Pumpkin
+    ["Auto Melee"] = true, -- Tự cộng điểm Melee.
+    ["Auto Random Candy"] = true,
+    ["Skip Random UI"] = true,
+    ["Auto Store"] = true,
+    ["Hide Notifications"] = true,
+    ["FPS Boost"] = true,
+    ["Hop Pumpkin Patch"] = false, -- Tự bật trong chế độ Pumpkin Patch.
+    ["Auto Summon Great Pumpkin"] = true,
+    ["Auto Coven Witch Hat"] = true,
+    ["Auto Candy Concoction"] = false,
+    ["Oni Celestial Choice"] = "Celestial (Right)",
+    ["Weapon"] = "Melee",
+    ["Farm Height"] = 25,
+    ["Tween Speed"] = 195,
+    ["Use Portals"] = true,
+    ["Show UI"] = true,
+    ["Auto Load"] = true, -- Tự chạy lại và giữ config khi chuyển server.
+    ["Webhook URL"] = "", -- Để trống để tắt webhook.
+    ["Webhook Store Fruit"] = true,
+    ["Webhook Boss Spawn"] = true,
+    ["Webhook Farm"] = true, -- Báo hạ boss và tiến độ farm.
+    ["Webhook Farm Interval"] = 300, -- Giây; 300 = 5 phút.
+}
+loadstring(game:HttpGet("https://raw.githubusercontent.com/realkidhub/realkid/refs/heads/main/KaitunHalloween.lua"))()
