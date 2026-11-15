@@ -1,0 +1,16 @@
+repeat task.wait() until game:IsLoaded() and game:GetService("Players").LocalPlayer
+if getgenv().RealKidKaitunDungeonRunning == true or getgenv().RealKidKaitunDungeonRunning == game.JobId then
+    return
+end
+
+getgenv().Config = getgenv().Config or {
+    Key = "", -- Để trống để dùng key đã lưu hoặc nhập qua UI
+    MainAccount = "", -- blank: join 3/4, then 2/4, then 1/4; otherwise create a pad
+    Difficulty = "Normal", -- Normal | Hard | Challenge
+    MinPlayers = 2,
+    Team = "Pirates", -- Pirates | Marines; used before moving from another place to Dungeon Hub
+    Tool = "Melee", -- Melee | Sword | Gun | Blox Fruit
+    -- Available: Lifesteal, All Cooldowns, HYPER!, Fruit M1 Speed, Armor, Sniper, Sword, Overflow, Gun, Melee, Fruit, Defense, Fortress
+    CardPriority = {"Lifesteal", "HYPER!"}, -- cards after Tool; left to right = higher priority
+}
+loadstring(game:HttpGet("https://raw.githubusercontent.com/realkidhub/realkid/refs/heads/main/kaitundungeon.lua"))()
