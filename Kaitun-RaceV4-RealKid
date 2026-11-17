@@ -1,16 +1,24 @@
-repeat task.wait() until game:IsLoaded() and game:GetService("Players").LocalPlayer
-if getgenv().RealKidKaitunDungeonRunning == true or getgenv().RealKidKaitunDungeonRunning == game.JobId then
-    return
-end
-
-getgenv().Config = getgenv().Config or {
-    Key = "", -- Để trống để dùng key đã lưu hoặc nhập qua UI
-    MainAccount = "", -- blank: join 3/4, then 2/4, then 1/4; otherwise create a pad
-    Difficulty = "Normal", -- Normal | Hard | Challenge
-    MinPlayers = 2,
-    Team = "Pirates", -- Pirates | Marines; used before moving from another place to Dungeon Hub
-    Tool = "Melee", -- Melee | Sword | Gun | Blox Fruit
-    -- Available: Lifesteal, All Cooldowns, HYPER!, Fruit M1 Speed, Armor, Sniper, Sword, Overflow, Gun, Melee, Fruit, Defense, Fortress
-    CardPriority = {"Lifesteal", "HYPER!"}, -- cards after Tool; left to right = higher priority
+getgenv().config = {
+    Key = "", -- Paste your key here
+    Language = "vi", -- "vi" / "en"
+    Enabled = true,
+    ["Auto Load"] = true, -- Reload script and restore this config after teleport.
+    FPS = 60,
+    TweenSpeed = 200, -- Maximum 200
+    Team = "Marines",
+    AutoTrial = true,
+    AutoUpgradeRace = true,
+    HelpGhoulV3 = false, -- Use the first two Help.Account usernames for Main's Ghoul V3 quest.
+    Main = {
+        Account = {""}, --Usernames/tài khoản ex/ví dụ: {"ccc","lol"}
+        Tier = 6,
+        Gear = "A-B-A", -- A = Red, B = Blue
+    },
+    Help = { Account = {"",""}, Reset = true},--Usernames/tài khoản ex/ví dụ: {"ccc","lol"}
+    Fruit = { Random = false, Store = false },
+    Webhook = { Enabled = false, Url = "", PingMode = "Không ping", UserId = "" },
+    trainingAreas = "Bone", -- "Bone" or "Cake"
+    HopNear = true, -- Hop when another player is within 500 studs during training
+    HopFullMoon = true, -- Hop to a Full Moon server when ready for Trial
 }
-loadstring(game:HttpGet("https://raw.githubusercontent.com/realkidhub/realkid/refs/heads/main/kaitundungeon.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/realkidhub/realkid/refs/heads/main/RealKidKaiTunV4.lua"))()
